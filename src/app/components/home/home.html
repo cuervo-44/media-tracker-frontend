@@ -1,1 +1,107 @@
-<p>home works!</p>
+<div class="ht-page">
+
+  <!-- ── Cabecera ──────────────────────────────────────── -->
+  <header class="ht-header">
+    <h1 class="ht-headline">
+      <span class="ht-headline-icon">🎬</span>
+      MediaTracker
+    </h1>
+    <p class="ht-subheadline">Tu biblioteca personal de películas y series</p>
+  </header>
+
+  <!-- ── Toolbar: búsqueda + filtros ──────────────────── -->
+  <div class="ht-toolbar">
+    <!-- Buscador -->
+    <div class="ht-search-wrap">
+      <span class="ht-search-icon">🔍</span>
+      <input
+        id="searchInput"
+        type="text"
+        class="ht-search"
+        placeholder="Buscar por título…"
+        [(ngModel)]="terminoBusqueda"
+        (ngModelChange)="aplicarFiltros()"
+      >
+    </div>
+
+    <div class="ht-divider"></div>
+
+    <!-- Filtros pill -->
+    <div class="ht-filters">
+      <span class="ht-filter-label-group">Mostrar</span>
+
+      <div class="ht-pill">
+        <input type="checkbox" id="checkPeliculas" [(ngModel)]="mostrarPeliculas" (change)="aplicarFiltros()">
+        <label for="checkPeliculas">
+          <span class="pill-dot"></span>
+          🎥 Películas
+        </label>
+      </div>
+
+      <div class="ht-pill">
+        <input type="checkbox" id="checkSeries" [(ngModel)]="mostrarSeries" (change)="aplicarFiltros()">
+        <label for="checkSeries">
+          <span class="pill-dot"></span>
+          📺 Series
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Grid de tarjetas ──────────────────────────────── -->
+  <div class="ht-grid">
+
+    <div class="ht-card" *ngFor="let item of itemsFiltrados">
+
+      <!-- Badge tipo -->
+      <span class="ht-badge" [ngClass]="esPelicula(item) ? 'ht-badge--movie' : 'ht-badge--serie'">
+        <span class="ht-badge-icon">{{ esPelicula(item) ? '🎥' : '📺' }}</span>
+        {{ esPelicula(item) ? 'Película' : 'Serie' }}
+      </span>
+
+      <!-- Título -->
+      <h2 class="ht-card-title">{{ item.nombre }}</h2>
+
+      <!-- Año -->
+      <div class="ht-card-meta">
+        <span>📅 {{ item.anyo }}</span>
+      </div>
+
+      <!-- Info específica -->
+      <div class="ht-card-info" *ngIf="esPelicula(item)">
+        <span class="ht-card-info-item">
+          <span class="ht-card-info-icon">⏱</span>
+          {{ item.duracion }} min
+        </span>
+        <span class="ht-card-info-item">
+          <span class="ht-card-info-icon">⭐</span>
+          {{ item.puntuacion }}
+        </span>
+      </div>
+      <div class="ht-card-info" *ngIf="!esPelicula(item)">
+        <span class="ht-card-info-item">
+          <span class="ht-card-info-icon">📂</span>
+          {{ item.temporadas?.length || 0 }} temporada{{ (item.temporadas?.length || 0) !== 1 ? 's' : '' }}
+        </span>
+      </div>
+
+      <!-- Acción -->
+      <div class="ht-card-action">
+        <a class="ht-btn"
+           [routerLink]="[esPelicula(item) ? '/pelicula' : '/serie', item.id]">
+          Ver detalle / Editar
+          <span class="ht-btn-arrow">→</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Estado vacío -->
+    <div class="ht-empty" *ngIf="itemsFiltrados.length === 0">
+      <span class="ht-empty-icon">🎞️</span>
+      <p>No se encontraron elementos con los filtros seleccionados.</p>
+    </div>
+
+  </div>
+
+</div>

@@ -44,9 +44,9 @@ export class Home implements OnInit {
       next: (res) => {
         this.peliculasOriginales = res.peliculas;
         this.seriesOriginales = res.series;
-        this.aplicarFiltros(); // Filtramos al cargar para mostrar todo por defecto
+        this.aplicarFiltros();//Calcula el contenido que se muestra
       },
-      error: (err) => console.error('Error al cargar los datos del backend:', err)
+      error: (err) => console.error('Error al cargar los datos:', err)
     });
   }
 
@@ -54,21 +54,21 @@ export class Home implements OnInit {
     let peliculasFiltradas: Pelicula[] = [];
     let seriesFiltradas: Serie[] = [];
 
-    // 1. Filtrar películas si la casilla está marcada
+    //Filtra las películas si la casilla está marcada
     if (this.mostrarPeliculas) {
       peliculasFiltradas = this.peliculasOriginales.filter(p =>
         p.nombre.toLowerCase().includes(this.terminoBusqueda.toLowerCase())
       );
     }
 
-    // 2. Filtrar series si la casilla está marcada
+    //Filtra lasseries si la casilla está marcada
     if (this.mostrarSeries) {
       seriesFiltradas = this.seriesOriginales.filter(s =>
         s.nombre.toLowerCase().includes(this.terminoBusqueda.toLowerCase())
       );
     }
 
-    // 3. Unificar ambas listas en una sola
+    //Unifica ambas listas en una sola
     this.itemsFiltrados = [...peliculasFiltradas, ...seriesFiltradas];
   }
 
