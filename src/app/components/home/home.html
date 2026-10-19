@@ -14,14 +14,8 @@
     <!-- Buscador -->
     <div class="ht-search-wrap">
       <span class="ht-search-icon">🔍</span>
-      <input
-        id="searchInput"
-        type="text"
-        class="ht-search"
-        placeholder="Buscar por título…"
-        [(ngModel)]="terminoBusqueda"
-        (ngModelChange)="aplicarFiltros()"
-      >
+      <input id="searchInput" type="text" class="ht-search" placeholder="Buscar por título…"
+        [(ngModel)]="terminoBusqueda" (ngModelChange)="aplicarFiltros()">
     </div>
 
     <div class="ht-divider"></div>
@@ -47,6 +41,64 @@
       </div>
     </div>
   </div>
+
+
+  <!-- ── NUEVO: Botón y Formulario para Añadir Elementos ─ -->
+  <div class="ht-create-section mb-4">
+    <button class="ht-btn ht-btn-success mb-3" (click)="toggleFormCrear()">
+      {{ mostrarFormCrear ? '✕ Cerrar formulario' : '+ Añadir Película o Serie' }}
+    </button>
+
+    <!-- Formulario Desplegable de Creación -->
+    <div class="ht-card ht-create-card mb-4" *ngIf="mostrarFormCrear">
+      <h3 class="ht-card-title mb-3">✨ Añadir Nuevo Elemento a la Biblioteca</h3>
+
+      <form (ngSubmit)="guardarNuevoItem()" class="ht-form">
+        <!-- Selector de Tipo -->
+        <div class="ht-field mb-3">
+          <label class="ht-label">¿Qué deseas añadir?</label>
+          <select class="ht-search" [(ngModel)]="tipoNuevo" name="tipoNuevo" style="padding-left: 0.85rem;">
+            <option value="pelicula">🎥 Película</option>
+            <option value="serie">📺 Serie</option>
+          </select>
+        </div>
+
+        <div class="ht-field-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+          <div class="ht-field" style="flex: 2;">
+            <label class="ht-label">Título</label>
+            <input type="text" class="ht-search" [(ngModel)]="nuevoItem.nombre" name="nombre" required
+              placeholder="Ej. El Señor de los Anillos" style="padding-left: 0.85rem;">
+          </div>
+          <div class="ht-field" style="flex: 1;">
+            <label class="ht-label">Año</label>
+            <input type="number" class="ht-search" [(ngModel)]="nuevoItem.anyo" name="anyo" required
+              style="padding-left: 0.85rem;">
+          </div>
+        </div>
+
+        <div class="ht-field-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+          <!-- Campo exclusivo para Película (Duración) -->
+          <div class="ht-field" style="flex: 1;" *ngIf="tipoNuevo === 'pelicula'">
+            <label class="ht-label">Duración (minutos)</label>
+            <input type="number" class="ht-search" [(ngModel)]="nuevoItem.duracion" name="duracion" required
+              style="padding-left: 0.85rem;">
+          </div>
+
+          <div class="ht-field" style="flex: 1;">
+            <label class="ht-label">Puntuación</label>
+            <input type="number" step="0.1" class="ht-search" [(ngModel)]="nuevoItem.puntuacion" name="puntuacion"
+              style="padding-left: 0.85rem;">
+          </div>
+        </div>
+
+        <div class="ht-card-action mt-3">
+          <button type="submit" class="ht-btn">Guardar en la Base de Datos →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- ────────────────────────────────────────────────── -->
+
 
   <!-- ── Grid de tarjetas ──────────────────────────────── -->
   <div class="ht-grid">
@@ -87,8 +139,7 @@
 
       <!-- Acción -->
       <div class="ht-card-action">
-        <a class="ht-btn"
-           [routerLink]="[esPelicula(item) ? '/pelicula' : '/serie', item.id]">
+        <a class="ht-btn" [routerLink]="[esPelicula(item) ? '/pelicula' : '/serie', item.id]">
           Ver detalle / Editar
           <span class="ht-btn-arrow">→</span>
         </a>

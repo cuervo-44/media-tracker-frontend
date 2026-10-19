@@ -77,5 +77,59 @@ export class Home implements OnInit {
     return 'duracion' in item;
   }
 
+  // Control para mostrar/ocultar el formulario de creación
+  mostrarFormCrear: boolean = false;
+  tipoNuevo: 'pelicula' | 'serie' = 'pelicula';
+
+  // Objeto unificado o separado para el formulario de creación
+  nuevoItem: any = {
+    nombre: '',
+    anyo: new Date().getFullYear(),
+    puntuacion: 0,
+    duracion: 120 // Específico de película por defecto
+  };
+
+  toggleFormCrear(): void {
+    this.mostrarFormCrear = !this.mostrarFormCrear;
+    if (this.mostrarFormCrear) {
+      // Resetear valores por defecto
+      this.nuevoItem = {
+        nombre: '',
+        anyo: new Date().getFullYear(),
+        puntuacion: 0,
+        duracion: 120
+      };
+    }
+  }
+
+  guardarNuevoItem(): void {
+    if (this.tipoNuevo === 'pelicula') {
+      this.peliculaService.guardar(this.nuevoItem).subscribe({
+        next: () => {
+          alert('Película creada con éxito');
+          this.mostrarFormCrear = false;
+          this.cargarDatos(); // Recargamos el listado
+        },
+        error: (err) => console.error('Error al crear película:', err)
+      });
+    } else {
+      // Para la serie creamos la estructura base (sin temporadas inicialmente, ya se añaden en su detalle)
+      const nuevaSerie = {
+        nombre: this.nuevoItem.nombre,
+        anyo: this.nuevoItem.anyo,
+        puntuacion: this.nuevoItem.puntuacion,
+        temporadas: []
+      };
+      this.serieService.guardar(nuevaSerie).subscribe({
+        next: () => {
+          alert('Serie creada con éxito');
+          this.mostrarFormCrear = false;
+          this.cargarDatos(); // Recargamos el listado
+        },
+        error: (err) => console.error('Error al crear serie:', err)
+      });
+    }
+  }
+
 }
 

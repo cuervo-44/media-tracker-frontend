@@ -1,0 +1,223 @@
+<div class="sd-page">
+
+  <!-- ── Nav superior ──────────────────────────────────── -->
+  <nav class="sd-topnav">
+    <a routerLink="/" class="sd-back-link">
+      <span class="sd-back-arrow">←</span>
+      Volver al inicio
+    </a>
+  </nav>
+
+  <!-- ── Cabecera ──────────────────────────────────────── -->
+  <header class="sd-header">
+    <div class="sd-header-left">
+      <span class="ht-badge ht-badge--serie sd-type-badge">
+        <span class="ht-badge-icon">📺</span>
+        Serie
+      </span>
+      <h1 class="sd-title">{{ serie.nombre || 'Cargando…' }}</h1>
+      <p class="sd-subtitle">Edita los detalles y gestiona las temporadas</p>
+    </div>
+  </header>
+
+  <!-- ── Layout principal: 2 columnas ──────────────────── -->
+  <div class="sd-layout">
+
+    <!-- ═══════════════════════════════════════════════
+         COLUMNA IZQUIERDA — Edición de la Serie
+    ════════════════════════════════════════════════ -->
+    <section class="sd-panel sd-panel--edit">
+
+      <div class="sd-panel-header">
+        <span class="sd-panel-icon">✏️</span>
+        <h2 class="sd-panel-title">Datos de la Serie</h2>
+      </div>
+
+      <form class="sd-form" (ngSubmit)="guardarCambios()" id="formEditSerie">
+
+        <!-- Nombre -->
+        <div class="sd-field">
+          <label class="sd-label" for="serieName">
+            <span class="sd-label-icon">🎬</span> Nombre
+          </label>
+          <input
+            id="serieName"
+            type="text"
+            class="sd-input"
+            [(ngModel)]="serie.nombre"
+            name="nombre"
+            placeholder="Título de la serie…"
+            required
+          >
+        </div>
+
+        <!-- Año -->
+        <div class="sd-field">
+          <label class="sd-label" for="serieAnyo">
+            <span class="sd-label-icon">📅</span> Año de estreno
+          </label>
+          <input
+            id="serieAnyo"
+            type="number"
+            class="sd-input"
+            [(ngModel)]="serie.anyo"
+            name="anyo"
+            placeholder="2024"
+            min="1900"
+            [max]="2100"
+            required
+          >
+        </div>
+
+        <!-- Separador de acciones -->
+        <div class="sd-field-divider"></div>
+
+        <!-- Botones -->
+        <div class="sd-actions">
+          <button
+            id="btnGuardarSerie"
+            type="submit"
+            class="sd-btn sd-btn--primary">
+            <span>💾</span> Guardar Cambios
+          </button>
+          <button
+            id="btnEliminarSerie"
+            type="button"
+            class="sd-btn sd-btn--danger"
+            (click)="eliminarSerie()">
+            <span>🗑️</span> Eliminar Serie
+          </button>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════
+         COLUMNA DERECHA — Gestión de Temporadas
+    ════════════════════════════════════════════════ -->
+    <section class="sd-panel sd-panel--seasons">
+
+      <div class="sd-panel-header">
+        <div class="sd-panel-header-left">
+          <span class="sd-panel-icon">📂</span>
+          <h2 class="sd-panel-title">Temporadas</h2>
+          <span class="sd-season-count">{{ serie.temporadas?.length || 0 }}</span>
+        </div>
+        <button
+          id="btnToggleFormTemp"
+          type="button"
+          class="sd-btn sd-btn--outline sd-btn--sm"
+          [class.sd-btn--outline-active]="mostrarFormTemporada"
+          (click)="mostrarFormTemporada = !mostrarFormTemporada">
+          <span class="sd-toggle-icon" [class.rotated]="mostrarFormTemporada">＋</span>
+          {{ mostrarFormTemporada ? 'Cancelar' : 'Añadir Temporada' }}
+        </button>
+      </div>
+
+      <!-- Sub-formulario añadir temporada -->
+      <div class="sd-subform-wrap" [class.sd-subform-wrap--open]="mostrarFormTemporada">
+        <form class="sd-subform" (ngSubmit)="agregarTemporada()" id="formNuevaTemp">
+          <div class="sd-subform-title">
+            <span>🆕</span> Nueva Temporada
+          </div>
+
+          <div class="sd-subform-grid">
+            <div class="sd-field">
+              <label class="sd-label" for="tempNumero">Nº Temporada</label>
+              <input
+                id="tempNumero"
+                type="number"
+                class="sd-input"
+                [(ngModel)]="nuevaTemporada.numeroTemporada"
+                name="numeroTemporada"
+                min="1"
+                required
+              >
+            </div>
+            <div class="sd-field">
+              <label class="sd-label" for="tempCapitulos">Nº Capítulos</label>
+              <input
+                id="tempCapitulos"
+                type="number"
+                class="sd-input"
+                [(ngModel)]="nuevaTemporada.numeroCapitulos"
+                name="numeroCapitulos"
+                min="1"
+                required
+              >
+            </div>
+            <div class="sd-field">
+              <label class="sd-label" for="tempAnyo">Año</label>
+              <input
+                id="tempAnyo"
+                type="number"
+                class="sd-input"
+                [(ngModel)]="nuevaTemporada.anyo"
+                name="anyo"
+                min="1900"
+                [max]="2100"
+                required
+              >
+            </div>
+            <div class="sd-field">
+              <label class="sd-label" for="tempPuntuacion">Puntuación</label>
+              <input
+                id="tempPuntuacion"
+                type="number"
+                class="sd-input"
+                [(ngModel)]="nuevaTemporada.puntuacion"
+                name="puntuacion"
+                step="0.1"
+                min="0"
+                max="10"
+              >
+            </div>
+          </div>
+
+          <button
+            id="btnGuardarTemp"
+            type="submit"
+            class="sd-btn sd-btn--success sd-btn--sm">
+            <span>✔</span> Guardar Temporada
+          </button>
+        </form>
+      </div>
+
+      <!-- Lista de temporadas -->
+      <div class="sd-season-list" *ngIf="serie.temporadas && serie.temporadas.length > 0; else sinTemporadas">
+        <div
+          class="sd-season-item"
+          *ngFor="let temp of serie.temporadas; let i = index"
+          [style.animation-delay]="(i * 0.06) + 's'">
+
+          <div class="sd-season-num">T{{ temp.numeroTemporada }}</div>
+
+          <div class="sd-season-info">
+            <span class="sd-season-info-item">
+              <span class="sd-season-info-icon">🎞️</span>
+              {{ temp.numeroCapitulos }} cap.
+            </span>
+            <span class="sd-season-info-item" *ngIf="temp.anyo">
+              <span class="sd-season-info-icon">📅</span>
+              {{ temp.anyo }}
+            </span>
+            <span class="sd-season-info-item" *ngIf="temp.puntuacion">
+              <span class="sd-season-info-icon">⭐</span>
+              {{ temp.puntuacion }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado vacío -->
+      <ng-template #sinTemporadas>
+        <div class="sd-empty">
+          <span class="sd-empty-icon">📭</span>
+          <p>Aún no hay temporadas registradas.</p>
+        </div>
+      </ng-template>
+
+    </section>
+  </div>
+
+</div>

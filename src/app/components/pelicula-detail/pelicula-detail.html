@@ -1,1 +1,142 @@
-<p>pelicula-detail works!</p>
+<div class="pd-page">
+
+  <!-- ── Nav superior ──────────────────────────────────── -->
+  <nav class="pd-topnav">
+    <a routerLink="/" class="pd-back-link">
+      <span class="pd-back-arrow">←</span>
+      Volver al inicio
+    </a>
+  </nav>
+
+  <!-- ── Tarjeta principal centrada ────────────────────── -->
+  <div class="pd-card-wrap">
+    <div class="pd-card">
+
+      <!-- Cabecera de la tarjeta -->
+      <div class="pd-card-header">
+        <div class="pd-card-header-top">
+          <span class="ht-badge ht-badge--movie">
+            <span class="ht-badge-icon">🎥</span>
+            Película
+          </span>
+        </div>
+        <h1 class="pd-card-title">{{ pelicula.nombre || 'Cargando…' }}</h1>
+        <p class="pd-card-subtitle">Edita los datos y guarda los cambios</p>
+      </div>
+
+      <!-- Separador -->
+      <div class="pd-separator"></div>
+
+      <!-- Formulario -->
+      <form class="pd-form" (ngSubmit)="guardarCambios()" id="formEditPelicula">
+
+        <!-- Nombre -->
+        <div class="pd-field">
+          <label class="pd-label" for="peliculaNombre">
+            <span class="pd-label-icon">🎬</span> Nombre
+          </label>
+          <input
+            id="peliculaNombre"
+            type="text"
+            class="pd-input"
+            [(ngModel)]="pelicula.nombre"
+            name="nombre"
+            placeholder="Título de la película…"
+            required
+          >
+        </div>
+
+        <!-- Año -->
+        <div class="pd-field">
+          <label class="pd-label" for="peliculaAnyo">
+            <span class="pd-label-icon">📅</span> Año de estreno
+          </label>
+          <input
+            id="peliculaAnyo"
+            type="number"
+            class="pd-input"
+            [(ngModel)]="pelicula.anyo"
+            name="anyo"
+            placeholder="2024"
+            min="1900"
+            max="2100"
+            required
+          >
+        </div>
+
+        <!-- Fila: Duración + Puntuación -->
+        <div class="pd-field-row">
+          <div class="pd-field">
+            <label class="pd-label" for="peliculaDuracion">
+              <span class="pd-label-icon">⏱</span> Duración
+              <span class="pd-label-hint">(min)</span>
+            </label>
+            <input
+              id="peliculaDuracion"
+              type="number"
+              class="pd-input"
+              [(ngModel)]="pelicula.duracion"
+              name="duracion"
+              placeholder="120"
+              min="1"
+              required
+            >
+          </div>
+
+          <div class="pd-field">
+            <label class="pd-label" for="peliculaPuntuacion">
+              <span class="pd-label-icon">⭐</span> Puntuación
+              <span class="pd-label-hint">(0–10)</span>
+            </label>
+            <input
+              id="peliculaPuntuacion"
+              type="number"
+              class="pd-input"
+              [(ngModel)]="pelicula.puntuacion"
+              name="puntuacion"
+              placeholder="8.5"
+              step="0.1"
+              min="0"
+              max="10"
+              required
+            >
+          </div>
+        </div>
+
+        <!-- Separador -->
+        <div class="pd-separator pd-separator--sm"></div>
+
+        <!-- Botones de acción -->
+        <div class="pd-actions">
+          <button
+            id="btnGuardarPelicula"
+            type="submit"
+            class="pd-btn pd-btn--primary">
+            <span>💾</span>
+            Guardar Cambios
+          </button>
+
+          <div class="pd-actions-secondary">
+            <button
+              id="btnEliminarPelicula"
+              type="button"
+              class="pd-btn pd-btn--danger"
+              (click)="eliminarPelicula()">
+              <span>🗑️</span>
+              Eliminar
+            </button>
+            <a
+              id="btnVolverPelicula"
+              routerLink="/"
+              class="pd-btn pd-btn--ghost">
+              <span>←</span>
+              Volver
+            </a>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>

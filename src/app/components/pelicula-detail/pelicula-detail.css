@@ -1,0 +1,356 @@
+/* =========================================================
+   PELICULA-DETAIL — MediaTracker
+   Diseño: Light Sapphire · coherente con Home y SerieDetail
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ── Variables (misma paleta Light Sapphire que Home) ───── */
+:host {
+  --bg-page: #f0f4fb;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --border: rgba(59, 105, 200, 0.12);
+  --border-hover: rgba(59, 105, 200, 0.28);
+
+  --accent: #2563eb;
+  --accent-glow: rgba(37, 99, 235, 0.18);
+  --accent-light: #1d4ed8;
+
+  --danger: #e11d48;
+  --danger-glow: rgba(225, 29, 72, 0.15);
+
+  --badge-movie-bg: rgba(37, 99, 235, 0.08);
+  --badge-movie-fg: #1e40af;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  --shadow-card: 0 4px 24px rgba(37, 99, 235, 0.10), 0 1px 4px rgba(0, 0, 0, 0.06);
+  --shadow-hover: 0 8px 36px rgba(37, 99, 235, 0.16), 0 0 0 1px var(--border-hover);
+  --shadow-input: 0 0 0 3px var(--accent-glow);
+  --shadow-danger: 0 0 0 3px rgba(225, 29, 72, 0.15);
+
+  --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Inter', system-ui, sans-serif;
+  display: block;
+}
+
+/* ── Página ─────────────────────────────────────────────── */
+.pd-page {
+  min-height: 100vh;
+  background: var(--bg-page);
+  padding: 2rem 1.5rem 4rem;
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Nav superior ───────────────────────────────────────── */
+.pd-topnav {
+  width: 100%;
+  max-width: 680px;
+  margin-bottom: 1.75rem;
+}
+
+.pd-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  border-radius: 999px;
+  padding: 0.38rem 0.9rem;
+  transition: all var(--transition);
+}
+
+.pd-back-link:hover {
+  color: var(--accent-light);
+  border-color: var(--accent);
+  background: var(--accent-glow);
+  text-decoration: none;
+}
+
+.pd-back-arrow {
+  font-size: 1rem;
+  transition: transform var(--transition);
+}
+
+.pd-back-link:hover .pd-back-arrow {
+  transform: translateX(-3px);
+}
+
+/* ── Tarjeta centrada ───────────────────────────────────── */
+.pd-card-wrap {
+  width: 100%;
+  max-width: 680px;
+  animation: fadeSlideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.pd-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 2rem 2.25rem 2.25rem;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow var(--transition);
+}
+
+.pd-card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+/* ── Cabecera de la tarjeta ─────────────────────────────── */
+.pd-card-header {
+  margin-bottom: 1.5rem;
+}
+
+.pd-card-header-top {
+  margin-bottom: 0.75rem;
+}
+
+/* Badge — reutilizado exactamente igual que en Home */
+.ht-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ht-badge--movie {
+  background: var(--badge-movie-bg);
+  color: var(--badge-movie-fg);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+.ht-badge-icon {
+  font-size: 0.75rem;
+}
+
+.pd-card-title {
+  margin: 0 0 0.25rem;
+  font-size: clamp(1.3rem, 3.5vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+.pd-card-subtitle {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+}
+
+/* ── Separadores ────────────────────────────────────────── */
+.pd-separator {
+  height: 1px;
+  background: var(--border);
+  margin: 0 0 1.5rem;
+}
+
+.pd-separator--sm {
+  margin: 0.25rem 0 1.25rem;
+}
+
+/* ── Formulario ─────────────────────────────────────────── */
+.pd-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.pd-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+/* Fila de dos columnas para Duración + Puntuación */
+.pd-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 480px) {
+  .pd-field-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pd-label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.065em;
+}
+
+.pd-label-icon {
+  font-size: 0.8rem;
+}
+
+.pd-label-hint {
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  text-transform: none;
+  letter-spacing: 0;
+  margin-left: 0.1rem;
+}
+
+.pd-input {
+  width: 100%;
+  background: #f8faff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.65rem 1rem;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 400;
+  outline: none;
+  transition: border-color var(--transition),
+    box-shadow var(--transition),
+    background var(--transition);
+  box-sizing: border-box;
+  appearance: textfield;
+}
+
+.pd-input::-webkit-outer-spin-button,
+.pd-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.pd-input::placeholder {
+  color: var(--text-muted);
+}
+
+.pd-input:hover:not(:focus) {
+  border-color: var(--border-hover);
+  background: #f3f7ff;
+}
+
+.pd-input:focus {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-input);
+  background: var(--bg-surface);
+}
+
+/* ── Acciones ───────────────────────────────────────────── */
+.pd-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pd-actions-secondary {
+  display: flex;
+  gap: 0.65rem;
+}
+
+/* ── Botones ────────────────────────────────────────────── */
+.pd-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--transition),
+    color var(--transition),
+    box-shadow var(--transition),
+    border-color var(--transition),
+    transform var(--transition);
+}
+
+.pd-btn:active {
+  transform: scale(0.97);
+}
+
+/* Primario — azul sólido */
+.pd-btn--primary {
+  width: 100%;
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  font-size: 0.9375rem;
+  padding: 0.75rem 1.5rem;
+}
+
+.pd-btn--primary:hover {
+  background: var(--accent-light);
+  border-color: var(--accent-light);
+  box-shadow: 0 4px 20px var(--accent-glow);
+  text-decoration: none;
+  color: #fff;
+}
+
+/* Danger — rojo con borde */
+.pd-btn--danger {
+  flex: 1;
+  background: transparent;
+  color: var(--danger);
+  border-color: rgba(225, 29, 72, 0.3);
+}
+
+.pd-btn--danger:hover {
+  background: var(--danger-glow);
+  border-color: var(--danger);
+  box-shadow: var(--shadow-danger);
+}
+
+/* Ghost — volver */
+.pd-btn--ghost {
+  flex: 1;
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: var(--border);
+}
+
+.pd-btn--ghost:hover {
+  background: var(--bg-page);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+/* ── Animación de entrada ───────────────────────────────── */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Serie } from '../models/serie.model';
+import { Temporada } from '../models/temporada.model';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,14 @@ export class SerieService {
 
   obtenerTodas(): Observable<Serie[]> {
     return this.http.get<Serie[]>(this.apiUrl);
+  }
+
+  obtenerPorId(id: number): Observable<Serie> {
+    return this.http.get<Serie>(`${this.apiUrl}/${id}`);
+  }
+
+  agregarTemporada(idSerie: number, temporada: Temporada): Observable<Serie> {
+    return this.http.post<Serie>(`${this.apiUrl}/${idSerie}/temporadas`, temporada);
   }
 
   buscarPorTitulo(titulo: string): Observable<Serie[]> {
