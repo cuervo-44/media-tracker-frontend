@@ -206,6 +206,14 @@
               {{ temp.puntuacion }}
             </span>
           </div>
+
+          <button
+            type="button"
+            class="sd-season-delete"
+            (click)="eliminarTemporada(temp.id)"
+            title="Eliminar esta temporada">
+            🗑️
+          </button>
         </div>
       </div>
 

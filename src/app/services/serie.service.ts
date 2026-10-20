@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { Serie } from '../models/serie.model';
 import { Temporada } from '../models/temporada.model';
 
@@ -21,7 +21,12 @@ export class SerieService {
   }
 
   agregarTemporada(idSerie: number, temporada: Temporada): Observable<Serie> {
-    return this.http.post<Serie>(`${this.apiUrl}/${idSerie}/temporadas`, temporada);
+    return this.obtenerPorId(idSerie).pipe(
+      switchMap((serie) => {
+        serie.temporadas = [...(serie.temporadas || []), temporada];
+        return this.guardar(serie);
+      })
+    );
   }
 
   buscarPorTitulo(titulo: string): Observable<Serie[]> {

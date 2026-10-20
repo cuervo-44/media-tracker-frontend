@@ -60,22 +60,61 @@ export class SerieDetail implements OnInit {
   }
 
   agregarTemporada(): void {
-    if (this.serie.id) {
-      // Llamamos al servicio para añadir la temporada asociada a esta serie
-      this.serieService.agregarTemporada(this.serie.id, this.nuevaTemporada).subscribe({
-        next: (serieActualizada) => {
-          this.serie = serieActualizada; // Actualizamos la vista con la nueva lista de temporadas
-          alert('Temporada añadida correctamente');
-          // Resetear formulario de temporada y ocultarlo
-          this.nuevaTemporada = {
-            numeroTemporada: (this.serie.temporadas?.length || 0) + 1,
-            numeroCapitulos: 1,
-            anyo: new Date().getFullYear(),
-            puntuacion: 0
-          };
-          this.mostrarFormTemporada = false;
+    if (!this.serie) return;
+    // Asegurar que los valores numéricos vengan correctamente tipados
+    const nuevaTemp: Temporada = {
+      numeroTemporada: +this.nuevaTemporada.numeroTemporada,
+      numeroCapitulos: +this.nuevaTemporada.numeroCapitulos,
+      anyo: +this.nuevaTemporada.anyo,
+      puntuacion: +this.nuevaTemporada.puntuacion
+    };
+
+    // Crear la serie actualizada con la nueva temporada en la lista
+    const serieActualizada: Serie = {
+      ...this.serie,
+      temporadas: [...(this.serie.temporadas || []), nuevaTemp]
+    };
+
+    // Guardar la serie completa en el backend
+    this.serieService.guardar(serieActualizada).subscribe({
+      next: (serieGuardada) => {
+        this.serie = serieGuardada;
+        alert('Temporada añadida correctamente');
+        // Resetear formulario de temporada con el siguiente número y ocultarlo
+        this.nuevaTemporada = {
+          numeroTemporada: (this.serie.temporadas?.length || 0) + 1,
+          numeroCapitulos: 1,
+          anyo: new Date().getFullYear(),
+          puntuacion: 0
+        };
+        this.mostrarFormTemporada = false;
+      },
+      error: (err) => {
+        console.error('Error al añadir temporada:', err);
+        alert('Error al guardar la temporada. Revisa la consola para más detalles.');
+      }
+    });
+  }
+
+  eliminarTemporada(idTemporada?: number): void {
+    if (!idTemporada) return;
+
+    if (confirm('¿Estás seguro de que deseas eliminar esta temporada?')) {
+      const serieActualizada: Serie = {
+        ...this.serie,
+        temporadas: (this.serie.temporadas || []).filter(t => t.id !== idTemporada)
+      };
+
+      this.serieService.guardar(serieActualizada).subscribe({
+        next: (serieGuardada) => {
+          this.serie = serieGuardada;
+          this.nuevaTemporada.numeroTemporada = (this.serie.temporadas?.length || 0) + 1;
+          alert('Temporada eliminada correctamente');
         },
-        error: (err) => console.error('Error al añadir temporada:', err)
+        error: (err) => {
+          console.error('Error al eliminar temporada:', err);
+          alert('Error al eliminar la temporada');
+        }
       });
     }
   }

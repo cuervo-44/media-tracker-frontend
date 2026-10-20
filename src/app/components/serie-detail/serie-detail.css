@@ -469,6 +469,24 @@
 
 .sd-season-info-icon { font-size: 0.72rem; opacity: 0.75; }
 
+.sd-season-delete {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  padding: 0.35rem 0.55rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  opacity: 0.6;
+  transition: opacity var(--transition), background var(--transition), border-color var(--transition);
+}
+
+.sd-season-delete:hover {
+  opacity: 1;
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
 /* ── Estado vacío ───────────────────────────────────────── */
 .sd-empty {
   display: flex;

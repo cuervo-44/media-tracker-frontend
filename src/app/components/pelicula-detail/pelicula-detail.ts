@@ -25,18 +25,11 @@ export class PeliculaDetail implements OnInit {
     anyo: new Date().getFullYear()
   };
 
-  //Este método es poco eficiente, revisar luego
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
-      const id = +idParam;
-      this.peliculaService.obtenerTodas().subscribe({
-        next: (peliculas) => {
-          const encontrada = peliculas.find(p => p.id === id);
-          if (encontrada) {
-            this.pelicula = encontrada;
-          }
-        },
+      this.peliculaService.obtenerPorId(+idParam).subscribe({
+        next: (pelicula) => this.pelicula = pelicula,
         error: (err) => console.error('Error al cargar la película:', err)
       });
     }
