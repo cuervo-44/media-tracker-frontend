@@ -76,9 +76,9 @@
           </div>
         </div>
 
-        <div class="ht-field-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-          <!-- Campo exclusivo para Película (Duración) -->
-          <div class="ht-field" style="flex: 1;" *ngIf="tipoNuevo === 'pelicula'">
+        <div class="ht-field-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;" *ngIf="tipoNuevo === 'pelicula'">
+          <!-- Campos exclusivos para Película -->
+          <div class="ht-field" style="flex: 1;">
             <label class="ht-label">Duración (minutos)</label>
             <input type="number" class="ht-search" [(ngModel)]="nuevoItem.duracion" name="duracion" required
               style="padding-left: 0.85rem;">

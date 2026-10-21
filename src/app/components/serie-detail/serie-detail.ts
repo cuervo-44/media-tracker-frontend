@@ -31,6 +31,8 @@ export class SerieDetail implements OnInit {
   };
 
   mostrarFormTemporada: boolean = false;
+  temporadaEditando: Temporada | null = null;
+  indiceTemporadaEditando: number | null = null;
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -92,6 +94,49 @@ export class SerieDetail implements OnInit {
       error: (err) => {
         console.error('Error al añadir temporada:', err);
         alert('Error al guardar la temporada. Revisa la consola para más detalles.');
+      }
+    });
+  }
+
+  iniciarEdicion(temp: Temporada, index: number): void {
+    this.indiceTemporadaEditando = index;
+    this.temporadaEditando = { ...temp };
+  }
+
+  cancelarEdicion(): void {
+    this.indiceTemporadaEditando = null;
+    this.temporadaEditando = null;
+  }
+
+  guardarEdicionTemporada(): void {
+    if (!this.temporadaEditando || this.indiceTemporadaEditando === null || !this.serie.temporadas) return;
+
+    const temporadaActualizada: Temporada = {
+      ...this.temporadaEditando,
+      numeroTemporada: +this.temporadaEditando.numeroTemporada,
+      numeroCapitulos: +this.temporadaEditando.numeroCapitulos,
+      anyo: +this.temporadaEditando.anyo,
+      puntuacion: +this.temporadaEditando.puntuacion
+    };
+
+    const nuevasTemporadas = this.serie.temporadas.map((t, idx) =>
+      idx === this.indiceTemporadaEditando ? temporadaActualizada : t
+    );
+
+    const serieActualizada: Serie = {
+      ...this.serie,
+      temporadas: nuevasTemporadas
+    };
+
+    this.serieService.guardar(serieActualizada).subscribe({
+      next: (serieGuardada) => {
+        this.serie = serieGuardada;
+        this.cancelarEdicion();
+        alert('Temporada modificada correctamente');
+      },
+      error: (err) => {
+        console.error('Error al modificar temporada:', err);
+        alert('Error al guardar los cambios de la temporada');
       }
     });
   }

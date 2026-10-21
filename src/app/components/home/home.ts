@@ -117,7 +117,6 @@ export class Home implements OnInit {
       const nuevaSerie = {
         nombre: this.nuevoItem.nombre,
         anyo: this.nuevoItem.anyo,
-        puntuacion: this.nuevoItem.puntuacion,
         temporadas: []
       };
       this.serieService.guardar(nuevaSerie).subscribe({

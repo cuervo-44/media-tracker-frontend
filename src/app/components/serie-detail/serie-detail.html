@@ -101,7 +101,7 @@
         <div class="sd-panel-header-left">
           <span class="sd-panel-icon">📂</span>
           <h2 class="sd-panel-title">Temporadas</h2>
-          <span class="sd-season-count">{{ serie.temporadas?.length || 0 }}</span>
+          <span class="sd-season-count">{{ serie.temporadas.length || 0 }}</span>
         </div>
         <button
           id="btnToggleFormTemp"
@@ -185,36 +185,126 @@
 
       <!-- Lista de temporadas -->
       <div class="sd-season-list" *ngIf="serie.temporadas && serie.temporadas.length > 0; else sinTemporadas">
-        <div
-          class="sd-season-item"
-          *ngFor="let temp of serie.temporadas; let i = index"
-          [style.animation-delay]="(i * 0.06) + 's'">
+        <ng-container *ngFor="let temp of serie.temporadas; let i = index">
 
-          <div class="sd-season-num">T{{ temp.numeroTemporada }}</div>
+          <!-- Modo edición de temporada -->
+          <div class="sd-season-edit-box" *ngIf="indiceTemporadaEditando === i; else vistaNormal">
+            <div class="sd-subform-title">
+              <span>✏️</span> Modificar Temporada {{ temp.numeroTemporada }}
+            </div>
 
-          <div class="sd-season-info">
-            <span class="sd-season-info-item">
-              <span class="sd-season-info-icon">🎞️</span>
-              {{ temp.numeroCapitulos }} cap.
-            </span>
-            <span class="sd-season-info-item" *ngIf="temp.anyo">
-              <span class="sd-season-info-icon">📅</span>
-              {{ temp.anyo }}
-            </span>
-            <span class="sd-season-info-item" *ngIf="temp.puntuacion">
-              <span class="sd-season-info-icon">⭐</span>
-              {{ temp.puntuacion }}
-            </span>
+            <div class="sd-subform-grid">
+              <div class="sd-field">
+                <label class="sd-label" [for]="'editTempNumero_' + i">Nº Temporada</label>
+                <input
+                  [id]="'editTempNumero_' + i"
+                  type="number"
+                  class="sd-input"
+                  [(ngModel)]="temporadaEditando!.numeroTemporada"
+                  [name]="'editNumeroTemporada_' + i"
+                  min="1"
+                  required
+                >
+              </div>
+              <div class="sd-field">
+                <label class="sd-label" [for]="'editTempCapitulos_' + i">Nº Capítulos</label>
+                <input
+                  [id]="'editTempCapitulos_' + i"
+                  type="number"
+                  class="sd-input"
+                  [(ngModel)]="temporadaEditando!.numeroCapitulos"
+                  [name]="'editNumeroCapitulos_' + i"
+                  min="1"
+                  required
+                >
+              </div>
+              <div class="sd-field">
+                <label class="sd-label" [for]="'editTempAnyo_' + i">Año</label>
+                <input
+                  [id]="'editTempAnyo_' + i"
+                  type="number"
+                  class="sd-input"
+                  [(ngModel)]="temporadaEditando!.anyo"
+                  [name]="'editAnyo_' + i"
+                  min="1900"
+                  max="2100"
+                  required
+                >
+              </div>
+              <div class="sd-field">
+                <label class="sd-label" [for]="'editTempPuntuacion_' + i">Puntuación</label>
+                <input
+                  [id]="'editTempPuntuacion_' + i"
+                  type="number"
+                  class="sd-input"
+                  [(ngModel)]="temporadaEditando!.puntuacion"
+                  [name]="'editPuntuacion_' + i"
+                  step="0.1"
+                  min="0"
+                  max="10"
+                >
+              </div>
+            </div>
+
+            <div class="sd-edit-actions">
+              <button
+                type="button"
+                class="sd-btn sd-btn--outline sd-btn--sm"
+                (click)="cancelarEdicion()">
+                <span>✕</span> Cancelar
+              </button>
+              <button
+                type="button"
+                class="sd-btn sd-btn--success sd-btn--sm"
+                (click)="guardarEdicionTemporada()">
+                <span>✔</span> Guardar Cambios
+              </button>
+            </div>
           </div>
 
-          <button
-            type="button"
-            class="sd-season-delete"
-            (click)="eliminarTemporada(temp.id)"
-            title="Eliminar esta temporada">
-            🗑️
-          </button>
-        </div>
+          <!-- Modo visualización de temporada -->
+          <ng-template #vistaNormal>
+            <div
+              class="sd-season-item"
+              [style.animation-delay]="(i * 0.06) + 's'">
+
+              <div class="sd-season-num">T{{ temp.numeroTemporada }}</div>
+
+              <div class="sd-season-info">
+                <span class="sd-season-info-item">
+                  <span class="sd-season-info-icon">🎞️</span>
+                  {{ temp.numeroCapitulos }} cap.
+                </span>
+                <span class="sd-season-info-item" *ngIf="temp.anyo">
+                  <span class="sd-season-info-icon">📅</span>
+                  {{ temp.anyo }}
+                </span>
+                <span class="sd-season-info-item" *ngIf="temp.puntuacion">
+                  <span class="sd-season-info-icon">⭐</span>
+                  {{ temp.puntuacion }}
+                </span>
+              </div>
+
+              <div class="sd-season-actions">
+                <button
+                  type="button"
+                  class="sd-season-edit"
+                  (click)="iniciarEdicion(temp, i)"
+                  title="Modificar esta temporada">
+                  ✏️
+                </button>
+                <button
+                  type="button"
+                  class="sd-season-delete"
+                  (click)="eliminarTemporada(temp.id)"
+                  title="Eliminar esta temporada">
+                  🗑️
+                </button>
+              </div>
+            </div>
+          </ng-template>
+
+        </ng-container>
       </div>
 
       <!-- Estado vacío -->
