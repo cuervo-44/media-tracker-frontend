@@ -61,8 +61,29 @@ export class SerieDetail implements OnInit {
     });
   }
 
+  validarPuntuacion(target: Temporada | null): void {
+    if (!target || target.puntuacion === null || target.puntuacion === undefined || (target.puntuacion as any) === '') return;
+    if (+target.puntuacion > 10) {
+      target.puntuacion = 10;
+    } else if (+target.puntuacion < 0) {
+      target.puntuacion = 0;
+    }
+  }
+
   agregarTemporada(): void {
     if (!this.serie) return;
+
+    if (
+      this.nuevaTemporada.puntuacion === null ||
+      this.nuevaTemporada.puntuacion === undefined ||
+      isNaN(+this.nuevaTemporada.puntuacion) ||
+      +this.nuevaTemporada.puntuacion < 0 ||
+      +this.nuevaTemporada.puntuacion > 10
+    ) {
+      alert('La puntuación debe estar comprendida entre 0 y 10.');
+      return;
+    }
+
     // Asegurar que los valores numéricos vengan correctamente tipados
     const nuevaTemp: Temporada = {
       numeroTemporada: +this.nuevaTemporada.numeroTemporada,
@@ -110,6 +131,17 @@ export class SerieDetail implements OnInit {
 
   guardarEdicionTemporada(): void {
     if (!this.temporadaEditando || this.indiceTemporadaEditando === null || !this.serie.temporadas) return;
+
+    if (
+      this.temporadaEditando.puntuacion === null ||
+      this.temporadaEditando.puntuacion === undefined ||
+      isNaN(+this.temporadaEditando.puntuacion) ||
+      +this.temporadaEditando.puntuacion < 0 ||
+      +this.temporadaEditando.puntuacion > 10
+    ) {
+      alert('La puntuación debe estar comprendida entre 0 y 10.');
+      return;
+    }
 
     const temporadaActualizada: Temporada = {
       ...this.temporadaEditando,

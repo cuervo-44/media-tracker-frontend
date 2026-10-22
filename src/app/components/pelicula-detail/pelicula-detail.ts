@@ -35,7 +35,27 @@ export class PeliculaDetail implements OnInit {
     }
   }
 
+  validarPuntuacion(): void {
+    if (this.pelicula.puntuacion === null || this.pelicula.puntuacion === undefined || (this.pelicula.puntuacion as any) === '') return;
+    if (+this.pelicula.puntuacion > 10) {
+      this.pelicula.puntuacion = 10;
+    } else if (+this.pelicula.puntuacion < 0) {
+      this.pelicula.puntuacion = 0;
+    }
+  }
+
   guardarCambios(): void {
+    if (
+      this.pelicula.puntuacion === null ||
+      this.pelicula.puntuacion === undefined ||
+      isNaN(+this.pelicula.puntuacion) ||
+      +this.pelicula.puntuacion < 0 ||
+      +this.pelicula.puntuacion > 10
+    ) {
+      alert('La puntuación debe estar comprendida entre 0 y 10.');
+      return;
+    }
+
     this.peliculaService.guardar(this.pelicula).subscribe({
       next: () => {
         alert('Película actualizada correctamente');

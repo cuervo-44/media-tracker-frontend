@@ -102,8 +102,28 @@ export class Home implements OnInit {
     }
   }
 
+  validarPuntuacion(): void {
+    if (this.nuevoItem.puntuacion === null || this.nuevoItem.puntuacion === undefined || (this.nuevoItem.puntuacion as any) === '') return;
+    if (+this.nuevoItem.puntuacion > 10) {
+      this.nuevoItem.puntuacion = 10;
+    } else if (+this.nuevoItem.puntuacion < 0) {
+      this.nuevoItem.puntuacion = 0;
+    }
+  }
+
   guardarNuevoItem(): void {
     if (this.tipoNuevo === 'pelicula') {
+      if (
+        this.nuevoItem.puntuacion === null ||
+        this.nuevoItem.puntuacion === undefined ||
+        isNaN(+this.nuevoItem.puntuacion) ||
+        +this.nuevoItem.puntuacion < 0 ||
+        +this.nuevoItem.puntuacion > 10
+      ) {
+        alert('La puntuación debe estar comprendida entre 0 y 10.');
+        return;
+      }
+
       this.peliculaService.guardar(this.nuevoItem).subscribe({
         next: () => {
           alert('Película creada con éxito');
